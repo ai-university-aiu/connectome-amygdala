@@ -127,19 +127,55 @@ they are the program working as designed:
   so the relation is a chain of adjacent-stratum steps), or a first-class "managed seam"
   construct. Recorded as an honest skip, not closed. **Parents: P1, P2, HIPPO-3, CEREBELLUM-2.**
 
+## AMYGDALA-3 — once mode was declared for the committed appraisal, but it did NOT bite (the appraisal is deterministic) · S=L · **CLOSED** (a Wave 8.5 honesty classification; parent N10 / the hippocampus recall)
+
+- **The Wave 8.5 honesty hedge.** The Wave 8 Part Three order had the region declare the
+  membership contract in ONCE mode "because the region commits one appraisal per stimulus".
+  A pre-flight review supplied the missing honesty clause: once mode only BITES — only
+  changes behaviour — when a predicate generates SEVERAL candidate outputs on backtracking
+  and commits one (the arbiter's nondeterministic-select-then-commit shape). This entry
+  records, truthfully, whether it bit here.
+- **Classification: DETERMINISTIC.** The committed appraisal is computed in a SINGLE
+  solution. `region_stratum_appraise/4` is an if-then-else over the sensory encoding
+  (`packs/region_stratum/prolog/region_stratum.pl`), `region_stratum_decide_valence/3` is a
+  deterministic if-then-else chain, and `region_stratum_commit_appraisal(Proposed, Proposed)`
+  is a single fact (line 196). `test(commit_is_deterministic)` confirms `findall` returns
+  exactly one appraisal. So once mode did NOT bite — it is correct for intent and harmless,
+  but inert, exactly the Wave 6 hippocampus recall and gap N10.
+- **No contrivance was present or removed.** There is no spurious candidate generator and
+  no extra choice points introduced to make once mode appear to fire; the appraisal pipeline
+  is honestly deterministic. (The "candidate" appraisals in the no-undefined-valence battery
+  are the TEST harness's adversarial INPUTS, not outputs the region generates.) Nothing was
+  rewritten — no dynamics, decomposition, strata, or structure records changed, and the
+  committed appraisal's value is unchanged.
+- **The membership guarantee still holds on the single committed output.** Whether or not
+  once mode bit, the committed appraisal is still a member of the legal valence set (in its
+  regime) or the explicit no_appraisal; the no-undefined-valence battery remains green (192
+  attempts, 0 escapes).
+- **Documentation.** The six-file SPARC set already describes the committed appraisal as
+  deterministic (Refinement: "the committed appraisal is deterministic (exactly one
+  solution, the once mode)"; Specification and Completion: "checked deterministically"), so
+  the honest classification corrects no claim and no SPARC file needed a version bump — this
+  Ledger entry is the record. **Parent: N10 (the per-solution versus deterministic-single-
+  solution distinction) and the Wave 6 hippocampus recall, where once mode likewise did not
+  bite.**
+
 ---
 
 ## Summary
 
-Two findings, both OPEN. **AMYGDALA-1** is the one the program predicted and chose this
+Two open findings, plus one honesty classification. **AMYGDALA-1** is the one the program predicted and chose this
 region to surface: PrologAI has no first-class construct for a persisted, modulatory
 affective state, so an appraising region can only DESCRIBE affect as data (the cortisol
 regime smuggled into the committed appraisal so the stateless contract can judge it in
 context; the learned association and cortisol tone carried as ordinary Lattice state) —
 a new gap the earlier regions never hit. **AMYGDALA-2** is the familiar cross-stratal seam
-recurring, here as the re-engaged cortisol channel (community 14 → macromolecular 4). The
-safety property (no undefined valence) and the reentrant conditioning loop were both
-carried by the enforced invariants — N8/N11/N14 made the guarantee a one-line declaration,
-and the closure hybrid carried the loop — so those are not findings, they are the program
-working as designed. The affect/appraisal gap and the cortisol seam stay open and honestly
-recorded; they are the product of the program.
+recurring, here as the re-engaged cortisol channel (community 14 → macromolecular 4).
+**AMYGDALA-3** (Wave 8.5, CLOSED) records the honest truth that once mode, though correctly
+declared for the committed appraisal, did NOT bite because the appraisal is deterministic —
+the same pattern as the hippocampus recall and gap N10; no contrivance was present, and the
+membership guarantee holds regardless. The safety property (no undefined valence) and the
+reentrant conditioning loop were both carried by the enforced invariants — N8/N11/N14 made
+the guarantee a one-line declaration, and the closure hybrid carried the loop — so those are
+not findings, they are the program working as designed. The affect/appraisal gap and the
+cortisol seam stay open and honestly recorded; they are the product of the program.
