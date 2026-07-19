@@ -1,0 +1,298 @@
+CONNECTOME-AMYGDALA PSEUDOCODE  (v1)
+
+The logic of the region's main flows in English-Readable-Code (ERC), mapping
+mechanically to the Prolog in packs/. Uppercase keywords name the control flow;
+PRIMITIVE operations (assignment, arithmetic, comparison, list operations, and
+IF/ELSE, FOR EACH, and so on) are used directly; LIBRARY operations (from PrologAI or
+SWI-Prolog) are referenced by their documented interface, not expanded. A procedure's
+signature lists its inputs, then an arrow, then its outputs; the arrow maps to the
+trailing arguments of the Prolog predicate. This is the valence and salience region:
+it appraises a stimulus with a valence and a salience, learns threat by association
+(fear conditioning), and modulates the appraisal by cortisol.
+Author: the PrologAI Community.
+
+
+PART ONE - THE CELLULAR STRATUM (the projection neurons, ordinal 6 -> pack layer 2)
+
+
+PROCEDURE cellular_stratum_encode(Stimulus -> Feature):
+    STEP look the stimulus up in the innate, unconditioned read-out table.
+    GUARD the table holds only the known stimuli: pain reads feature(0.9, 0.0),
+        shock feature(0.95, 0.0), snake feature(0.8, 0.0), food feature(0.0, 0.9),
+        tone feature(0.0, 0.0), light feature(0.0, 0.0). Each pairs an innate threat
+        magnitude with an innate reward magnitude, both in the unit interval [0.0, 1.0].
+    IF the stimulus is not in the table THEN FAIL (no clause matches).
+    NOTE the FAILURE is the mechanism of abstention: an unknown stimulus is not encoded,
+        so the caller (region_stratum_appraise) yields the explicit no_appraisal and the
+        region never invents a tag.
+    RETURN the matched feature(Threat, Reward) as Feature.
+
+PROCEDURE cellular_stratum_project(Drive -> Rate):
+    GUARD Drive is a number.
+    IF Drive is less than 0.0 THEN RETURN 0.0.
+    ELSE IF Drive is greater than 1.0 THEN RETURN 1.0.
+    ELSE RETURN Drive.
+    NOTE this clamps an appraisal drive into the [0.0, 1.0] firing range - the bounded
+        salience the appraisal carries (a negative drive fires at zero; a drive above
+        one saturates at one).
+
+
+PART TWO - THE MACROMOLECULAR STRATUM (the cortisol receptor cascade, ordinal 4 -> pack layer 1)
+
+
+PROCEDURE macromolecular_stratum_cortisol_regime(Cortisol -> Regime):
+    GUARD Cortisol is a number.
+    STEP read the stress threshold, fixed at 0.5.
+    IF Cortisol is greater than or equal to the threshold THEN RETURN stress.
+    ELSE RETURN baseline.
+    NOTE this is the transduced, discrete read-out of the receptor cascade that the
+        region's appraisal carries in the committed appraisal term.
+
+PROCEDURE macromolecular_stratum_threat_gain(Cortisol -> Gain):
+    GUARD Cortisol is a number.
+    STEP calculate the sum of 1.0 and Cortisol.
+    RETURN it as Gain.
+    NOTE the gain is 1.0 at rest and 2.0 at maximum cortisol, so the same stimulus
+        reads as more threatening when cortisol is high. A native rate law, never a
+        causal_relation_object (CRO).
+
+PROCEDURE macromolecular_stratum_reward_suppression(Regime -> Factor):
+    IF Regime is baseline THEN RETURN 1.0 (reward appraisal left intact).
+    ELSE IF Regime is stress THEN RETURN 0.0 (reward appraisal zeroed).
+    NOTE under acute stress the glucocorticoid cascade suppresses reward/approach
+        appraisal, so the region cannot appraise a stimulus as appetitive while stressed.
+
+
+PART THREE - THE SYNAPTIC STRATUM (the associative plasticity write, ordinal 7 -> pack layer 3)
+
+
+PROCEDURE synaptic_stratum_potentiate(Assoc0, Paired -> Assoc1):
+    STEP read the associative learning rate, fixed at 0.5 (the fraction of the gap to
+        the asymptote closed per conditioning trial).
+    IF Paired is true THEN
+        GUARD Assoc0 is a number, then COMMIT to this branch with a green cut (the
+            pairing selects the clause deterministically).
+        STEP calculate the difference of 1.0 and Assoc0 (the remaining gap to the ceiling).
+        STEP calculate the product of the learning rate and that gap.
+        STEP calculate the sum of Assoc0 and that product as Assoc1 (the association
+            strengthens toward 1.0 - fear acquisition, a Rescorla-Wagner step closing
+            half the remaining gap).
+    ELSE IF Paired is false THEN
+        GUARD Assoc0 is a number, then COMMIT to this branch with a green cut.
+        STEP calculate the product of the learning rate and Assoc0.
+        STEP calculate the difference of Assoc0 and that product as Assoc1 (the
+            association decays toward 0.0 - extinction).
+    RETURN Assoc1.
+    NOTE the write only changes HOW STRONG the association is; it never invents a
+        valence. The green cut (the guarded number check plus "!" at each clause head)
+        makes the write deterministic - first-argument indexing keys on the association,
+        not on the true/false pairing, so without the cut a spurious choicepoint remained
+        (the bug found and fixed during the build; no behaviour change).
+
+
+PART FOUR - THE REGION STRATUM (the amygdalar circuit, ordinal 9 -> pack layer 4)
+
+
+PROCEDURE region_stratum_decide_valence(EffThreat, EffReward -> Valence):
+    STEP read the three cuts: the threat cut 0.5, the reward cut 0.5, the safe cut 0.2.
+    IF EffThreat is greater than or equal to the threat cut THEN RETURN threat.
+    ELSE IF EffReward is greater than or equal to the reward cut THEN RETURN appetitive.
+    ELSE IF either EffThreat or EffReward is greater than or equal to the safe cut THEN
+        RETURN safe (a mild signal reads as wary).
+    ELSE RETURN neutral.
+
+PROCEDURE region_stratum_appraise(Stimulus, Cortisol, Assoc -> Appraisal):
+    STEP apply cellular_stratum_encode(Stimulus) to attempt the innate feature read-out.
+    IF the encode FAILS (an unknown stimulus) THEN RETURN no_appraisal (abstain).
+    ELSE, having feature(Threat, Reward):
+        STEP apply macromolecular_stratum_cortisol_regime(Cortisol) to get the Regime.
+        STEP apply macromolecular_stratum_threat_gain(Cortisol) to get the Gain.
+        STEP apply macromolecular_stratum_reward_suppression(Regime) to get the RewardFactor.
+        STEP calculate the sum of Threat and Assoc, then the product of that sum and Gain,
+            as the ThreatDrive (the innate threat plus the learned association, gained by
+            cortisol).
+        STEP apply cellular_stratum_project(ThreatDrive) to clamp it to the bounded EffThreat.
+        STEP calculate the product of Reward and RewardFactor as the RewardDrive (the
+            innate reward, suppressed by cortisol under stress).
+        STEP apply cellular_stratum_project(RewardDrive) to clamp it to the bounded EffReward.
+        STEP apply region_stratum_decide_valence(EffThreat, EffReward) to get the Valence.
+        IF EffThreat is greater than or equal to EffReward THEN set Salience to EffThreat.
+        ELSE set Salience to EffReward (the salience is the larger effective magnitude -
+            how much the stimulus matters).
+        RETURN the term appraisal(Valence, Salience, Regime).
+    NOTE the appraisal carries its Regime so its legality can be judged IN CONTEXT by the
+        stateless membership contract - the honest workaround the Ledger records as
+        AMYGDALA-1 (the regime is smuggled into the value because the contract's accessor
+        sees only the value, never a separate context).
+
+PROCEDURE region_stratum_valence_in_regime(Regime -> Valence):
+    IF Regime is baseline THEN Valence is a member of [threat, safe, appetitive, neutral].
+    ELSE IF Regime is stress THEN Valence is a member of [threat, safe, neutral].
+    NOTE this is where the legal set is CONTEXT-DEPENDENT: cortisol narrows the valence
+        set - under stress the appetitive (reward/approach) tag is not available. This is
+        a membership-TEST relation, never a materialised set.
+
+PROCEDURE region_stratum_legal_appraisal(Appraisal):
+    GUARD Appraisal has the shape appraisal(Valence, Salience, Regime).
+    GUARD Salience is a number, greater than or equal to 0.0, and less than or equal to 1.0.
+    TEST region_stratum_valence_in_regime(Regime) admits Valence (the valence is legal in
+        this appraisal's cortisol regime).
+    NOTE this is the membership-TEST goal (the N11 accessor form): the set of legal
+        appraisals is context-dependent (the regime) AND uncountable (the continuous
+        salience), so it is checked against THIS goal without materialising any set. It is
+        a PURE, deterministic membership test.
+
+PROCEDURE region_stratum_commit_appraisal(Proposed -> Committed):
+    STEP return Proposed as Committed.
+    NOTE the DECLARED membership contract wraps this predicate: LIBRARY
+        membership_contract_enforce_goal(region_stratum_commit_appraisal/2, 2,
+        region_stratum_legal_appraisal, no_appraisal, once) enforces that the committed
+        appraisal (argument 2) satisfies the legal-appraisal test goal - a valence legal
+        in its regime and a well-formed salience - or is the explicit no_appraisal, else
+        it throws a glass-box violation. The check runs ONCE on the committed single
+        answer (once mode, the Wave 8 Part One once-deterministic mode, N14). The set is
+        never materialised (the N11 accessor form). An invented valence tag, an
+        out-of-range salience, or a contextually-illegal appraisal (appetitive under
+        stress) is refused. Nothing is hand-rolled.
+
+PROCEDURE region_stratum_appraise_committed(Stimulus, Cortisol, Assoc -> Committed):
+    STEP apply region_stratum_appraise(Stimulus, Cortisol, Assoc) to get the Proposed appraisal.
+    STEP apply region_stratum_commit_appraisal(Proposed) to get the guarded Committed.
+    RETURN Committed.
+    NOTE this is the appraisal the region actually emits, so every emitted appraisal has
+        passed the once-mode membership contract.
+
+PROCEDURE region_stratum_condition(Assoc0, Paired -> Assoc1):
+    STEP apply LIBRARY synaptic_stratum_potentiate(Assoc0, Paired) to write the new association.
+    RETURN Assoc1.
+    NOTE the conditioning sub-module delegates to the synaptic associative write (a
+        downward call): a paired trial strengthens, an unpaired one weakens. DYNAMICS,
+        kept native (an associative rule, never a CRO).
+
+PROCEDURE region_stratum_valence_of(Appraisal -> Valence):
+    IF Appraisal has the shape appraisal(Valence, _, _) THEN RETURN that Valence (with a cut).
+    ELSE IF Appraisal is no_appraisal THEN RETURN none.
+
+PROCEDURE region_stratum_trial_paired(Schedule, Iter -> Paired):
+    IF Schedule is paired THEN RETURN true (acquisition always pairs).
+    ELSE IF Schedule is unpaired THEN RETURN false (extinction never pairs).
+    ELSE IF Schedule is partial THEN
+        STEP calculate the remainder of Iter divided by 2.
+        IF the remainder is 0 THEN RETURN true (pair on even trials).
+        ELSE RETURN false (omit on odd trials).
+    NOTE the partial schedule alternates, so the association oscillates and never fully
+        settles - the honest bounded-stop case (partial reinforcement).
+
+
+PART FIVE - THE REENTRANT CONDITIONING LOOP (appraise, condition, re-appraise, closed with the Lattice hybrid)
+
+
+PROCEDURE region_stratum_condition_tick(Nexus):
+    GUARD block with no busy-poll until the trial cue (phase 1) exists on the Lattice,
+        then take it (LIBRARY neural_lattice_await_cue), reading State0.
+    STEP read from State0 the cue Stimulus, the Cortisol level, the current association
+        Assoc, the Schedule, the trial counter Iter0, the last association change
+        LastChange, and the token Token0.
+    STEP apply region_stratum_appraise_committed(Stimulus, Cortisol, Assoc) to get the
+        Appraisal (committed through the once-mode contract, so the guarantee holds every trial).
+    STEP calculate the sum of Token0 and 1 as Token.
+    STEP record and print the conditioning hop for the glass-box trace (LIBRARY
+        neural_lattice_hop) - the beat arrived VIA the Lattice.
+    STEP read the settling tolerance 0.05 and the trial bound 8.
+    IF LastChange is less than or equal to the tolerance THEN
+        STEP read the Valence out of the Appraisal (region_stratum_valence_of).
+        STEP narrate the CONVERGED line (the association settled to a stable learned valence).
+        STEP post the phase-2 result converged(Assoc, Valence, Iter0).
+    ELSE IF Iter0 is greater than or equal to the bound THEN
+        STEP read the Valence out of the Appraisal.
+        STEP narrate the BOUNDED-STOP line (the trial budget is spent with the association
+            still changing - a legal "not fully conditioned", not a hang).
+        STEP post the phase-2 result bounded_stop(Assoc, Valence, Iter0).
+    ELSE (one conditioning step, then re-enter):
+        STEP apply region_stratum_trial_paired(Schedule, Iter0) to decide this trial's Paired.
+        STEP apply region_stratum_condition(Assoc, Paired) to get the new association Assoc1.
+        STEP calculate the absolute value of the difference of Assoc1 and Assoc as the Change.
+        STEP calculate the sum of Iter0 and 1 as Iter1.
+        STEP narrate the trial line (association Assoc -> Assoc1, cue appraised Valence).
+        STEP update State0 with the new assoc Assoc1, iter Iter1, last_change Change, and token Token.
+        STEP RE-POST the trial cue (phase 1) with the updated state (reentry through the
+            Lattice - stigmergy for state plus notification for reactivity, never
+            in-process recursion, no actor-to-actor reference).
+    NOTE the association changes MONOTONICALLY under a steady schedule; the loop
+        converges, bounded-stops, or never hangs.
+
+PROCEDURE region_stratum_run_conditioning(Nexus, Seed -> Result):
+    STEP post the initial trial cue (phase 1) with Seed - the cue, cortisol, starting
+        association, schedule, and the counters enter the conditioning loop (LIBRARY
+        neural_lattice_post_cue).
+    GUARD block, bounded to thirty seconds, for the phase-2 result (LIBRARY lattice_await);
+        on timeout FAIL (a hang the runner reports as HUNG, rather than blocking forever).
+    STEP take exactly one phase-2 result cue (LIBRARY lattice_take), reading Done.
+    STEP read the result field out of Done as Result (converged(...) or bounded_stop(...)).
+    RETURN Result.
+
+
+PART SIX - THE COMMUNITY-AND-SOCIETY STRATUM (the social source of cortisol, ordinal 14 -> pack layer 5)
+
+
+PROCEDURE community_stratum_cortisol_skip_cro(-> Cro):
+    STEP apply community_stratum_stressor_occurrent to mint the social-stressor occurrent
+        (the skip's HIGH endpoint, at community-and-society ordinal 14).
+    STEP apply LIBRARY macromolecular_stratum_receptor_occurrent to reference the
+        receptor-activation occurrent (the skip's LOW endpoint, at macromolecular ordinal
+        4) - a DOWNWARD reference.
+    STEP mint the CRO from the stressor cause to the receptor effect, flagged skips:true
+        (LIBRARY cm_cro, the shared Causalontology 2.0.0 minting vocabulary).
+    RETURN the minted Cro.
+    NOTE cortisol jumps community 14 -> macromolecular 4 without modelling the intervening
+        hypothalamic-pituitary-adrenal (HPA) axis, so the CRO carries skips:true honestly.
+        The N6 binding checker passes it (a downward skip is legal; only an upward edge
+        fails) and the classifier reads it as a clean skip (skipping, skip-gaps=[]). This
+        is the Wave 2 slice's cortisol channel RE-ENGAGED, and the recurrence the Ledger
+        records as AMYGDALA-2 (the unmanaged cross-stratal seam).
+
+PROCEDURE community_stratum_skip_check(-> Class, Gaps):
+    STEP mint the cortisol skip CRO and its two endpoint occurrents (stressor, receptor).
+    STEP mint the two strata the CRO spans (community, macromolecular).
+    STEP build the occurrent map and the stratum map the classifier needs (LIBRARY cm_map_of).
+    STEP classify the cross-stratal relation (LIBRARY causal_core_classify), expecting skipping.
+    STEP read the skip-gaps (LIBRARY causal_core_skip_gaps), expecting none.
+    RETURN the Class and the Gaps.
+    NOTE the classification "skipping" with empty gaps is what makes the absent HPA-axis
+        mechanism a positive finding, not a validation error.
+
+
+PART SEVEN - ACCEPTANCE TESTS (the honest gate criteria)
+
+
+TEST AC-1 (no undefined valence): GIVEN the commit predicate, WHEN it is asked to commit
+    appraisal(euphoria, 0.5, baseline) - an invented tag - THEN the once-mode contract
+    refuses it (throws a glass-box violation); WHEN asked to commit appraisal(appetitive,
+    0.5, stress) - contextually illegal, because appetitive is suppressed under stress -
+    THEN it is also refused; WHEN asked to commit a legal appraisal (a valence in its
+    regime with a salience in [0.0, 1.0]) or no_appraisal THEN it passes. The battery
+    inspects 192 attempts with 9 out-of-set refusals and 0 escapes.
+
+TEST AC-2 (appraisal and cortisol modulation): GIVEN the appraisal sub-module, WHEN pain
+    is appraised at rest THEN the valence is threat; WHEN food is appraised at rest THEN
+    appetitive; WHEN food is appraised under stress (cortisol 0.8) THEN reward is
+    suppressed and the valence is neutral, NOT appetitive; WHEN a part-conditioned tone
+    (association 0.3) is appraised under stress THEN cortisol amplifies it to threat; WHEN
+    an unknown stimulus is appraised THEN the region abstains with no_appraisal.
+
+TEST AC-3 (the conditioning loop settles): GIVEN cue tone with a paired schedule from
+    association 0.0, WHEN the loop runs THEN the association climbs monotonically toward
+    1.0 (0.0, 0.5, 0.75, 0.875, 0.9375, 0.969) and CONVERGES to threat at five trials;
+    GIVEN a conditioned tone with an unpaired schedule from 0.9 it CONVERGES to neutral at
+    five trials (0.9 decays to about 0.028); GIVEN an alternating partial schedule it
+    BOUNDED-STOPS at eight trials (association about 0.33), never hangs.
+
+TEST AC-4 (the loop reenters through the Lattice): GIVEN the one runtime actor
+    region_stratum_condition_tick, WHEN the closure checker runs THEN there are zero
+    actor-to-actor references, no in-process recursion, and no busy-poll; the proof is
+    NON-VACUOUS (injecting a self-recursive tick makes the checker exit 1).
+
+TEST AC-5 (the structure validates): GIVEN the 32 minted Causalontology 2.0.0 records
+    across eight kinds, WHEN the validator runs THEN all are valid, the cortisol skip
+    classifies as skipping with empty skip-gaps, and the Ed25519 signed assertion over the
+    cortisol skip verifies.

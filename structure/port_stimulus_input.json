@@ -1,0 +1,11 @@
+{
+  "accepts": [
+    "occurrent:e55158988dc07b382fd5a95427ad0a2931e79580d75da211a34f8488a8bfb50d",
+    "occurrent:7c056803aa96e74aad2ff1e4e7707f8fe14cb2e614b7c2fb074320dc91c2d8d2"
+  ],
+  "bearer":"continuant:241b8ec4b04e45ac950d40a48bd43c508f6d8eef660b51fe3acab07cc1c30d85",
+  "direction":"in",
+  "id":"port:eda7776c03570725bbc070d3765e0ac9e87658e21669a498b3705c93de178853",
+  "label":"stimulus_input",
+  "type":"port"
+}

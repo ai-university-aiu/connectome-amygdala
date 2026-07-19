@@ -1,0 +1,127 @@
+CONNECTOME-AMYGDALA COMPLETION  (v1)
+
+Delivered status: what passed, the final gate results in honest form, a bug found
+and fixed during the build, the pinned PrologAI commit, and the region's honest
+limits. Author: the PrologAI Community.
+
+
+PART ONE - DELIVERED
+
+The valence and salience region is delivered and green. Seven packs (two
+reused-verbatim substrate packs and five stratum packs) implement appraise,
+condition, and modulate as internal sub-modules of the region stratum, on a
+supporting cortisol receptor cascade (macromolecular), a pair of projection neurons
+(cellular), an associative plasticity write (synaptic), and the community stratum as
+the social source of cortisol. The region APPRAISES a stimulus - it assigns a
+valence (an affective tag) and a salience (how much it matters), it learns threat by
+association (fear conditioning), and it modulates the appraisal by cortisol. This is
+a genuinely new job: the earlier regions selected (arbiter), stored (hippocampus),
+and corrected (cerebellum); none had to appraise.
+
+The committed appraisal is guarded by PrologAI's membership contract, declared in
+its accessor form (a membership-test goal, so the legal set is never materialised)
+and in once mode (one appraisal per stimulus, checked deterministically). The legal
+valence set is {threat, safe, appetitive, neutral} plus the explicit abstention
+no_appraisal, and it is CONTEXT-DEPENDENT: under stress the appetitive valence is
+suppressed and is not legal, while the salience is a continuous real in the unit
+interval - so the legal set is neither a fixed list nor even countable, which is
+exactly the case the accessor form and the once mode were built for. The safety
+property, no undefined valence, is therefore a one-line declaration, not a
+hand-rolled guard.
+
+The runner narrates, glass-box, all four valences and the abstention, the cortisol
+modulation (food under stress reads neutral rather than appetitive; a
+part-conditioned tone under stress reads threat), and three conditioning episodes: a
+paired tone acquires threat, converging at five trials (the association climbs from
+0.0 to 0.969 and the cue flips neutral to threat); a conditioned tone extinguishes,
+converging at five trials (0.9 down to 0.028); and an alternating partial-
+reinforcement schedule bounded-stops at eight trials (the association resting near
+0.33, a legal "not fully conditioned"). The adversarial attempts to commit an
+invented valence and an appetitive appraisal under stress are both refused.
+
+
+PART TWO - THE GATE RESULTS (HONEST FORM)
+
+  NO UNDEFINED VALENCE  : PASS  (192 attempts, 9 out-of-set refusals, 0 escapes)
+  conditioning loop     : PASS  (acquisition converges at 5 trials; extinction at 5; partial bounded-stops at 8; association monotonic; never hangs)
+  closure / no-coupling : PASS  (reenters through the Lattice; 0 actor-to-actor refs; no busy-poll; proven non-vacuous; one runtime actor)
+  strict layer rule     : PASS  (7 declared packs; 0 upward edges)
+  layer-to-stratum bind : PASS  (5 bound packs order-preserving: ordinals 4/6/7/9/14 -> layers 1/2/3/4/5; 2 unbound substrate gaps; 0 violations)
+  structure validation  : PASS  (32 records valid across 8 kinds; the cortisol skip classifies clean; the Ed25519 signature verifies)
+  per-pack test suites   : PASS  (all seven suites green)
+  mini regression       : ARC-AGI-1 40/40 and ARC-AGI-2 12/12
+
+The nine out-of-set refusals are invented affective tags (euphoria, rage, xyzzy),
+out-of-range saliences, and the contextually-illegal appetitive-under-stress - each
+one the membership contract refuses, with zero escapes over 192 attempts. The
+structure validation covers 32 newly-minted Causalontology 2.0.0 records across the
+eight kinds assertion, causal_relation_object (CRO), conduit, continuant, occurrent,
+port, realizable, and stratum; the cortisol CRO classifies as a skip with an empty
+skip-gap list, and the Ed25519 signed assertion over it verifies. The one runtime
+actor is region_stratum_condition_tick, and the closure gate is proven non-vacuous:
+injecting a self-recursive tick makes it exit non-zero.
+
+The mini regression is a ten percent spot-check, run through PrologAI's own harness.
+The honest figures are forty of forty and twelve of twelve; they are NEVER to be
+rounded to four hundred of four hundred or one hundred twenty of one hundred twenty.
+The full four-hundred-task regression is deferred to the conclusion of the program.
+
+
+PART THREE - A BUG FOUND AND FIXED
+
+The build surfaced one defect and fixed it in place. The associative write
+synaptic_stratum_potentiate/3 left a spurious choicepoint - first-argument indexing
+keys on the association strength, not on the true/false pairing, so the clause head
+did not commit - which raised a Prolog Unit (PLUnit) "succeeded with choicepoint"
+warning. It was fixed with a green cut (number(Assoc0), ! at the head of each
+clause), making the write deterministic. No behaviour changed: the association's
+values are identical before and after, and every suite stays green.
+
+
+PART FOUR - THE PINNED PROLOGAI COMMIT
+
+The region was built, minted, validated, and gated against PrologAI main at commit
+35678d53d818d97f93cb89cd8a581ead8d587f9a - the Wave 8 Part One once-mode tip -
+resolved read-only through the PROLOGAI_HOME environment variable. Nothing outside
+this repository was modified. PrologAI, the memory region (hippocampus), the arbiter,
+the cerebellum, the vertical slice, the three frozen Wave 3 arms, the frozen spike,
+Mentova, and causalontology were all left unchanged. A gap is a Ledger entry, never
+a commit against PrologAI.
+
+
+PART FIVE - HONEST LIMITS
+
+The region's honest limits are its two open Ledger findings. They are the product of
+the program, not defects to hide.
+
+  AMYGDALA-1 (severity high, the headline, a new gap with no parent): PrologAI has no
+  first-class construct for a persisted, modulatory affective state. Two concrete
+  walls follow. First, the membership contract - even its accessor form - guards the
+  OUTPUT value alone: its test goal is called once(call(TestGoal, Out)) and cannot
+  receive context, so to make the legal valence set depend on the cortisol regime the
+  region must SMUGGLE the regime into the committed value, carrying the triple
+  appraisal(Valence, Salience, Regime) rather than a pair. Second, the persisted
+  affect - the learned association and the cortisol tone - is carried as ordinary
+  Lattice and module data (plain fields on the conditioning-loop state), not as a
+  first-class held-affect construct. The honest workaround, recorded as a workaround,
+  is to fold the regime into the term and carry affect as data. The minimum remedy is
+  a first-class affective-state or modulatory-context construct plus a context-aware
+  accessor of the shape call(TestGoal, Out, Context). This is the finding the program
+  predicted and chose an appraising region to surface; selection, storage, and
+  correction never had to hold an affective state.
+
+  AMYGDALA-2 (severity low, a recurrence with parents P1, P2, HIPPO-3, and
+  CEREBELLUM-2): the cortisol channel is a cross-stratal skip - community-and-society
+  (ordinal 14) down to macromolecular (ordinal 4) - with no modelled intervening
+  hypothalamic-pituitary-adrenal (HPA) axis mechanism. The relation carries skips:true
+  honestly and classifies as a clean skip (skipping, with an empty skip-gap list). The
+  minimum remedy is to model the intervening strata as a chain of adjacent-stratum
+  steps, or a first-class "managed seam" construct. It is re-engaged from the Wave 2
+  slice's cortisol channel, not re-invented.
+
+Both findings stay open and honestly recorded. The safety property (no undefined
+valence) and the reentrant conditioning loop were both carried by the enforced
+invariants - the membership contract made the guarantee a one-line declaration, and
+the closure hybrid carried the loop - so those are the program working as designed,
+not findings. The deliverable is the finding: especially the affect and appraisal
+gap, and the cross-stratal cortisol seam.

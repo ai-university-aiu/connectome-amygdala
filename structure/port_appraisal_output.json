@@ -1,0 +1,8 @@
+{
+  "accepts": ["occurrent:446c2fbd6123152978003518148591334aec7ef500afb1db6f66f41d611c230b" ],
+  "bearer":"continuant:241b8ec4b04e45ac950d40a48bd43c508f6d8eef660b51fe3acab07cc1c30d85",
+  "direction":"out",
+  "id":"port:c9815282ee7e9e29fe18b05fb281bf591640092842b080cde550fabd0b6bda91",
+  "label":"appraisal_output",
+  "type":"port"
+}

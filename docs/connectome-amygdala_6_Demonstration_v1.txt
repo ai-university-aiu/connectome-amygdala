@@ -1,0 +1,130 @@
+CONNECTOME-AMYGDALA DEMONSTRATION  (v1)
+
+A plan of intent for demonstrating the region: what to run, what it shows, and what a
+viewer should conclude. This is a plan, not a finished demonstration, and it changes no
+code. Author: the PrologAI Community.
+
+
+PART ONE - WHAT IS BEING DEMONSTRATED
+
+connectome-amygdala is a valence and salience region: its job is to APPRAISE - to assign
+a stimulus a valence (its affective tag) and a salience (how much it matters), to learn
+threat by association, and to modulate that appraisal by cortisol. It is distinct from
+the earlier regions, which selected (arbiter), stored (hippocampus), and corrected
+(cerebellum); this is the first region that has to hold an affective judgement. The
+demonstration exists to make three claims visible and checkable by a viewer who does not
+take them on trust: that the region APPRAISES with genuine affect (all four valences, the
+explicit abstention, and cortisol modulation); that it LEARNS threat by association (a
+neutral cue acquires a threat appraisal over trials, and later extinguishes); and that it
+can NEVER emit an undefined valence (the once-mode accessor contract refuses an invented
+tag, an out-of-range salience, and a contextually-illegal appraisal). A fourth thing is
+demonstrated by not being hidden: the region's defining function, appraisal, presses on a
+real limit of the platform - PrologAI has no first-class construct for a persisted,
+modulatory affective state - which the program records in its Ledger and in the shape of
+its own data rather than papering over.
+
+
+PART TWO - WHAT TO RUN
+
+TRACK ONE - THE APPRAISAL DEMO. Run bin/run_amygdala.sh with PROLOGAI_HOME pointing at a
+PrologAI checkout at or after the once-mode commit
+(35678d53d818d97f93cb89cd8a581ead8d587f9a). Its first section appraises a spread of seven
+probe stimuli and commits each through the contract.
+  What it shows: every one of the four valences appears - pain reads threat, food at rest
+  reads appetitive, an untrained tone reads neutral, and a part-conditioned tone at rest
+  reads safe (wary) - together with the explicit no-appraisal on an unknown stimulus, so
+  the region abstains rather than inventing a tag. Two probes make the cortisol modulation
+  visible: food under stress reads neutral, not appetitive, because reward is suppressed
+  while cortisol is high; and the same part-conditioned tone, appraised under stress,
+  reads threat, because cortisol amplifies the threat drive. Each appraisal is narrated
+  glass-box: the stimulus, the cortisol level, the learned association, and the committed
+  appraisal.
+
+TRACK TWO - THE CONDITIONING EPISODES. The same runner then spawns the conditioning actor
+and runs three fixed episodes through the reentrant loop (appraise, condition,
+re-appraise).
+  What it shows: acquisition pairs a neutral tone with an aversive outcome and CONVERGES
+  to threat at five trials, the learned association climbing monotonically from 0.0 to
+  0.969 as the cue's appraisal flips from neutral to threat; extinction presents a
+  conditioned tone unpaired and CONVERGES back to neutral at five trials, the association
+  falling from 0.9 to 0.028; and a partial-reinforcement episode, whose schedule
+  alternates paired and unpaired trials, never settles and BOUNDED-STOPS at eight trials
+  with the association near 0.33 - a legal "not fully conditioned", not a hang. Twenty-one
+  conditioning hops occur, every one arriving through the Lattice: the tick awaits its
+  numbered cue, does one step, and re-posts its own cue, so the loop reenters by
+  notification and never by in-process recursion. The runner tells the three outcomes
+  apart - converged, bounded-stopped, and (never seen) hung, which a bounded await would
+  report as a failure rather than block on forever.
+
+TRACK THREE - NO UNDEFINED VALENCE. Run bin/check_membership.sh (the flagship adversarial
+battery) and read the adversarial line in the runner.
+  What it shows: across 192 committed appraisals - a direct sweep of hand-built
+  candidates plus the real appraise-then-commit pipeline over many stimuli, cortisol
+  levels, and learned associations - not one escapes the legal valence set. Nine
+  out-of-set attempts are refused by the once-mode membership contract: invented affective
+  tags (euphoria, rage, xyzzy, terror_supreme), an out-of-range salience (5.0 and -0.1),
+  a contextually-illegal appraisal (appetitive under stress), and a malformed regime. The
+  guarantee is obtained by a single declaration - the contract in its accessor form (a
+  membership-test goal, so the context-dependent, uncountable legal set is never
+  materialised) and in once mode (one appraisal per stimulus, checked deterministically) -
+  not by a hand-rolled guard.
+
+TRACK FOUR - THE GATES. Run each bin/*.sh checker and PrologAI's mini regression.
+  What it shows: the structure validator (bin/validate_structure.sh) confirms 32
+  newly-minted records valid against Causalontology 2.0.0 across eight kinds (assertion,
+  causal_relation_object, conduit, continuant, occurrent, port, realizable, and stratum),
+  that the cortisol skip classifies as skipping with an empty skip-gap list, and that the
+  Ed25519 signed assertion over that skip verifies. The layer rule (bin/check_layers.sh)
+  passes seven declared packs with zero upward edges; the binding checker
+  (bin/check_layer_binding.sh) passes five bound packs whose stratum ordinals (4, 6, 7, 9,
+  14) map order-preserving to layers (1, 2, 3, 4, 5), two unbound substrate packs, and
+  zero binding violations, with the downward cortisol skip explicitly allowed. The closure
+  checker (bin/check_no_coupling.sh) passes and is proven non-vacuous - injecting a
+  self-recursive tick makes it exit 1 - with exactly one runtime actor
+  (region_stratum_condition_tick), zero actor-to-actor references, no in-process
+  recursion, and no busy-poll. Every pack's in-pack PLUnit suite passes. PrologAI's
+  benchmark spot-check is unmoved at forty of forty and twelve of twelve.
+
+TRACK FIVE - THE FINDING. Read LEDGER.md, entries AMYGDALA-1 and AMYGDALA-2, and inspect
+the Regime field of structure/cro_appraisal.json and the skips flag of
+structure/cro_cortisol_skip.json (these are JavaScript Object Notation, or JSON, records
+written by the validator).
+  What it shows: AMYGDALA-1, the headline, is visible in the data itself. The committed
+  appraisal is the triple appraisal(Valence, Salience, Regime), not the pair a valence and
+  a salience would suggest, because the membership contract's accessor is called
+  once(call(TestGoal, Out)) and receives only the committed value, never a context - so to
+  make the legal valence set depend on the cortisol regime the region must smuggle that
+  regime into the committed term. The learned association and the cortisol tone, likewise,
+  are carried as ordinary fields on the Lattice conditioning-loop state, not as a
+  first-class held affect. AMYGDALA-2 is visible in the skip record: the cortisol channel
+  jumps the community-and-society stratum (ordinal 14) to the macromolecular stratum
+  (ordinal 4) carrying skips:true, with no modelled hypothalamic-pituitary-adrenal (HPA)
+  axis between - an honest cross-stratal skip, re-engaged from the Wave 2 slice's channel,
+  not re-invented.
+
+
+PART THREE - WHAT A VIEWER SHOULD CONCLUDE
+
+A viewer should conclude that an appraising region can be built glass-box on the enforced
+invariants; that its safety property (no undefined valence) is a language guarantee rather
+than hand-rolled code, even though the legal set is context-dependent on cortisol and
+uncountable in its continuous salience; that the region genuinely learns threat by
+association and genuinely unlearns it, monotonically and through the Lattice; and that
+where the platform still lacks a construct - a first-class, persisted, modulatory
+affective state - the region says so, in the Ledger and in the smuggled Regime field of
+its own committed appraisals, rather than pretending it is there. The point is not only
+that the region appraises; it is that the affect it computes can, for now, only be
+DESCRIBED as data, and the build records exactly that.
+
+
+PART FOUR - WHAT IT MUST NOT CLAIM
+
+It must not claim the mini regression as a full benchmark score; the honest figures are
+forty of forty and twelve of twelve, never rounded to 400/400 or 120/120. It must not
+claim that affect is modelled as a first-class held state - it is folded into the
+committed term and carried as ordinary Lattice data, and the finding AMYGDALA-1 is open.
+It must not claim the cortisol channel models the endocrine pathway - it is an honest
+downward cross-stratal skip flagged skips:true with no modelled HPA axis, and the finding
+AMYGDALA-2 stays open. It demonstrates one region, not the full connectome, and it
+modifies no code - not PrologAI, not the earlier regions. Where the region cannot be
+faithful, it says so, in the Ledger and in the data.

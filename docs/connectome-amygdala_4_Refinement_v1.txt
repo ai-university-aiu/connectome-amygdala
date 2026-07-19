@@ -1,0 +1,158 @@
+CONNECTOME-AMYGDALA REFINEMENT  (v1)
+
+How the design was verified and improved: the checkers, the in-pack tests, the
+adversarial no-undefined-valence battery, the gates, and the one bug found and
+fixed during the build.
+Author: the PrologAI Community.
+
+
+PART ONE - THE GATES AS ADVERSARIAL CHECKS
+
+The flagship gate is NO UNDEFINED VALENCE (bin/check_membership.sh, over
+bin/check_membership.pl): an adversarial battery that TRIES to make the region
+commit an appraisal whose valence lies outside the legal set, and confirms it
+cannot. It runs in two arms. The DIRECT arm feeds a fixed list of candidate
+appraisals straight at the guarded commit: seven legal appraisals across both
+regimes, the explicit no_appraisal abstention, four invented affective tags
+(euphoria, terror_supreme, xyzzy, rage), two out-of-range saliences (5.0 and
+-0.1), two contextually-illegal appraisals (appetitive under stress, at two
+saliences), and one malformed regime (euphoric_regime). The PIPELINE arm runs
+the real appraise-then-commit path over a wide sweep - every stimulus crossed
+with five cortisol levels and five learned associations - and confirms every
+appraisal the region would actually produce is legal. Each commit is classified
+as member (a legal appraisal), no_appraisal (the safe abstention), refused (the
+once-mode membership contract threw), or ESCAPED (an out-of-set appraisal
+committed WITHOUT a throw - the one outcome the guarantee forbids). The battery
+inspects 192 attempts, records 9 out-of-set refusals, and finds 0 escapes. The
+9 refusals partition exactly as the direct arm intends: 4 invented tags, 2
+out-of-range saliences, 2 appetitive-under-stress appraisals, and 1 malformed
+regime. Because region_stratum_commit_appraisal/2 DECLARES PrologAI's membership
+contract in the accessor form (a context-dependent, uncountable legal-appraisal
+test goal, never materialised) and in once mode, every refusal is the contract's,
+not a hand-rolled guard's. This is what makes the gate meaningful: the refusal of
+an invented tag, an out-of-range salience, and a contextually-illegal appraisal
+all flow from the same one-line declaration.
+
+The structure validator (bin/validate_structure.sh, over
+bin/validate_structure.pl) assembles the region's 32 newly-minted records from the
+five stratum packs and validates every one against PrologAI's unmodified
+Causalontology 2.0.0 conformance engine - the JavaScript Object Notation (JSON)
+schema check (co_validate_schema/4) and the local semantic rules
+(causal_core_validate_semantics/3) - across 8 record kinds (assertion,
+causal_relation_object, conduit, continuant, occurrent, port, realizable, and
+stratum). It then confirms the cross-stratal cortisol relation classifies as
+SKIPPING with an empty skip-gap list (community-and-society 14 down to
+macromolecular 4, carrying skips:true honestly about the un-modelled
+hypothalamic-pituitary-adrenal pathway), and that the Ed25519 signed provenance
+assertion over that relation VERIFIES. Each record is also written to
+structure/<name>.json as an artifact.
+
+The layer rule L4 (bin/check_layers.sh) loads PrologAI's unmodified library(layer)
+and confirms zero upward edges among the 7 declared packs (layers 0, 0, 1, 2, 3,
+4, 5). The N6 binding checker (bin/check_layer_binding.sh) confirms the 5 bound
+stratum packs are order-preserving against their stratum ordinals (4, 6, 7, 9,
+and 14 map to layers 1, 2, 3, 4, and 5) with 0 binding violations; the two
+substrate packs (neural_lattice and causal_grounding) declare no stratum and are
+unbound gaps, never violations. Critically, the DOWNWARD cortisol skip passes the
+binding check: only an upward edge would fail, and a legal downward skip is not
+one.
+
+The closure checker (bin/check_no_coupling.sh) confirms the region's one runtime
+actor - the conditioning tick, region_stratum_condition_tick - reenters through
+the Lattice and never through the call stack. It strips comments from every
+stratum pack and checks three things: that no stratum pack names another
+stratum's runtime tick (0 actor-to-actor references, the four pure packs being
+downward sub-modules, not coupled actors); that the tick re-posts a Lattice cue
+(neural_lattice_post_cue) and calls itself at most once, at its own head (no
+in-process recursion); and that the tick awaits on the Lattice
+(neural_lattice_await_cue) rather than busy-polling. The check is proven
+NON-VACUOUS: injecting a self-recursive tick - a second in-process call site -
+makes the checker exit 1, so a passing run is a real result, not a checker that
+can never fail.
+
+
+PART TWO - THE IN-PACK TEST SUITES
+
+Each pack ships a Prolog Unit (PLUnit) suite, run by bin/run_tests.sh, each in its
+own SWI-Prolog process. The seven suites all pass: causal_grounding 2,
+neural_lattice 2, cellular_stratum 5, synaptic_stratum 5, community_stratum 5,
+macromolecular_stratum 6, and region_stratum 14. The region suite is the deepest,
+and proves the region's promises in isolation: that an aversive stimulus is
+appraised threat with high salience; that an appetitive stimulus is appraised
+appetitive at baseline but NOT under stress (cortisol suppresses the reward
+appraisal); that cortisol amplifies threat (a part-conditioned cue reads safe at
+rest but threat under stress); that an unknown stimulus yields the explicit
+no_appraisal; that the legal valence set genuinely narrows under stress
+(appetitive is legal at baseline and illegal under stress, while threat is legal
+in both); that a legal appraisal and the abstention both commit, while an invented
+valence, an out-of-range salience, and appetitive-under-stress are each REFUSED by
+the once-mode accessor contract with a membership_contract_goal_violation; that
+the committed appraisal is deterministic (exactly one solution, the once mode);
+that a paired conditioning step strengthens the association monotonically and a
+repeatedly paired neutral cue eventually reads threat; and that all 11 of the
+region's structure records are schema-valid, including that the computational
+appraisal conduit carries a transform. The macromolecular, cellular, synaptic, and
+community suites each prove their native dynamics (the regime classifier, the
+threat gain and reward suppression, the sensory encoding and bounded projection,
+the associative potentiation and extinction, the cortisol skip classification and
+signature) and their structure records in the same isolated style.
+
+
+PART THREE - THE BUG FOUND AND FIXED - THE SYNAPTIC POTENTIATION CHOICEPOINT
+
+During the build the associative write left a spurious choicepoint.
+synaptic_stratum_potentiate/3 has two clauses - one for a paired trial (the
+second argument true) and one for an unpaired trial (false) - and SWI-Prolog's
+first-argument indexing keys on the FIRST argument, the association (a number),
+not on the pairing flag that actually distinguishes the clauses. So after the
+correct clause produced its answer, a choicepoint remained, and PLUnit reported
+the region and synaptic tests "succeeded with choicepoint". This is a
+determinism defect, not a wrong answer: the write was correct, but not clean. The
+fix is a green cut - number(Assoc0), ! at the head of each clause - which
+confirms the current strength is a number and then commits to the clause the
+pairing selects, making the write deterministic. Because the two clauses were
+already mutually exclusive on their second argument, the cut removes only the dead
+alternative and changes no result: the acquisition and extinction sequences, and
+every downstream appraisal, are byte-identical before and after. No behaviour
+change.
+
+
+PART FOUR - THE MONOTONICITY AND CONVERGENCE STORY
+
+Fear conditioning is a bounded associative rule: a paired trial closes half the
+remaining gap to the ceiling (a Rescorla-Wagner half-gap step at learning rate
+0.5, association toward 1.0), and an unpaired trial decays the association halfway
+toward the floor (toward 0.0). Under a STEADY schedule the association therefore
+changes MONOTONICALLY, and the reentrant loop distinguishes three outcomes, which
+the runner (bin/run_amygdala.sh) tells apart. ACQUISITION (a neutral tone always
+paired) converges to threat after 5 trials: the association climbs 0.0, 0.5, 0.75,
+0.875, 0.9375, 0.969, the per-trial change falls below the settle tolerance of
+0.05, and the cue's committed appraisal flips from neutral to threat. EXTINCTION
+(a conditioned tone always unpaired) converges to neutral after 5 trials, the
+association decaying from 0.9 to 0.028. PARTIAL reinforcement (an alternating
+schedule that pairs on even trials and omits on odd ones) never settles, so it
+BOUNDED-STOPS at the trial bound of 8 with the association oscillating near 0.33 -
+a legal "not fully conditioned", distinguished from a hang by a bounded await
+(30 seconds) that FAILS rather than blocks. Across the three episodes the loop
+records 21 conditioning hops, every one arriving through the Lattice (the tick
+re-posts its own cue), with 0 actor-to-actor references and no busy-poll. The
+runner also re-checks the safety property live: it appraises a spread of stimuli
+(showing all four valences, the abstention, and the cortisol modulation) and then
+adversarially forces an invented valence (euphoria) and a contextually-illegal one
+(appetitive under stress) past the commit, both of which the contract REFUSES. Its
+verdict is pass.
+
+
+PART FIVE - THE MINI REGRESSION, IN HONEST FORM
+
+The build is gated additionally by PrologAI's own mini regression
+($PROLOGAI_HOME/bin/run_mini_regression.sh), a ten-percent spot-check of the
+Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI)
+benchmarks. It reports ARC-AGI-1 40/40 and ARC-AGI-2 12/12. These are the honest
+figures: forty of four hundred and twelve of one hundred twenty, a spot-check, not
+the full run. The full regression stays DEFERRED, and this result is NEVER rounded
+up to 400/400 or 120/120. The region reuses PrologAI read-only at the pinned
+commit 35678d53d818d97f93cb89cd8a581ead8d587f9a (main, the Wave 8 Part One
+once-mode tip); PrologAI was not modified, so the mini regression is a guard that
+the region's checkout did not disturb the substrate it rests on, not a claim about
+the region's own reasoning.

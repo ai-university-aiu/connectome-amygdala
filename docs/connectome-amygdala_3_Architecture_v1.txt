@@ -1,0 +1,227 @@
+CONNECTOME-AMYGDALA ARCHITECTURE  (v1)
+
+The structure of the region: its packs, the strata they map to, the layer
+assignments, the layer-zero substrate, the Lattice coordination, the interfaces (the
+ports and the appraisal conduit), the cross-stratal cortisol skip, and where it reuses
+PrologAI read-only. Author: the PrologAI Community.
+
+
+PART ONE - THE STRATUM-PRIMARY DECOMPOSITION
+
+The region is carved one pack per Causalontology stratum on the outside, and one
+construct per module on the inside (the Wave 3 verdict). It occupies five strata plus a
+layer-zero substrate of two packs:
+
+  layer 0  neural_lattice          substrate (no stratum)               stigmergy plus await/notify
+  layer 0  causal_grounding        substrate (no stratum)               the Causalontology 2.0.0 minting vocabulary
+  layer 1  macromolecular_stratum  stratum macromolecular (ordinal 4)   the cortisol (glucocorticoid) receptor cascade
+  layer 2  cellular_stratum        stratum cellular (ordinal 6)         the amygdala projection neurons
+  layer 3  synaptic_stratum        stratum synaptic (ordinal 7)         the lateral-amygdala associative plasticity write
+  layer 4  region_stratum          stratum region (ordinal 9)           appraise, condition, modulate; the committed appraisal; the loop
+  layer 5  community_stratum       stratum community_and_society (14)    the social source of cortisol (pure, no tick)
+
+Seven packs, six layers. Each stratum pack declares BOTH its pack layer (in pack.pl,
+for the L4 layer rule) and its stratum label (stratum(Label), for the N6 binding), and
+the stratum's ordinal is read authoritatively from the pack's own minted stratum record
+in structure/. The region OCCUPIES the cellular stratum (ordinal 6), which the Wave 6
+memory region deliberately left empty, as the cerebellum did before it - appraisal is
+genuinely a cell-level story (the lateral-amygdala input neurons and the central-nucleus
+output neurons). Five strata are occupied - ordinals 4, 6, 7, 9, 14 - and their layers
+fall out order-preserving (1, 2, 3, 4, 5), which the binding checker confirms with zero
+violations.
+
+The two substrate packs carry no stratum. They are layer(0) and are unbound gaps to the
+N6 binding, never violations: neural_lattice is the coordination substrate and
+causal_grounding is the shared minting vocabulary. Every record-owning pack co-locates
+its structure with its runtime (the verdict's stratum-primary stance); together the
+packs mint 32 Causalontology 2.0.0 records across eight kinds (assertion,
+causal_relation_object, conduit, continuant, occurrent, port, realizable, stratum),
+materialised as one JavaScript Object Notation (JSON) file each under structure/.
+
+
+PART TWO - THE LAYER AND STRATUM LADDER, AND THE CORTISOL SKIP
+
+The ladder runs coarse-and-social at the top (high ordinal, high layer) down to
+molecular at the bottom (low ordinal, low layer). The cortisol channel is a single long
+DOWNWARD edge on the right, from the community stratum straight to the macromolecular
+stratum, skipping every stratum between:
+
+    layer 5   community_and_society (14)   community_stratum        o   social stressor
+                                                                    :     (skip source)
+    layer 4   region (9)                   region_stratum           :
+                                                                    :   cortisol descends,
+    layer 3   synaptic (7)                 synaptic_stratum         :   skipping the region
+                                                                    :   (9), synaptic (7),
+    layer 2   cellular (6)                 cellular_stratum         :   and cellular (6)
+                                                                    :   strata between
+    layer 1   macromolecular (4)           macromolecular_stratum   o   receptor activation
+                                                                          (skip target)
+
+    layer 0   neural_lattice               substrate (no stratum)   stigmergy plus await/notify
+    layer 0   causal_grounding             substrate (no stratum)   the minting vocabulary
+
+The skip's high endpoint is the social-stressor occurrent minted in community_stratum
+(ordinal 14); its low endpoint is the receptor-activation occurrent minted in
+macromolecular_stratum (ordinal 4). The channel itself is a causal relation object,
+minted in the community pack, carrying skips:true. It descends from ordinal 14 to
+ordinal 4, so it is a legal DOWNWARD cross-stratal edge (Part Seven explains why).
+
+
+PART THREE - THE PACK GRAPH (STATIC IMPORTS, ALL DOWNWARD)
+
+  region_stratum (4)
+    |-- macromolecular_stratum (1)   the cortisol regime, threat gain, and reward suppression
+    |-- cellular_stratum (2)         the sensory encoding and the bounded salience projection
+    |-- synaptic_stratum (3)         the associative plasticity write for the conditioning step
+    |-- causal_grounding (0)         minting the region's own eleven structure records
+    |-- neural_lattice (0)           the reentrant conditioning loop's coordination
+    |-- (external, read-only) PrologAI membership_contract, lattice, lists
+
+  community_stratum (5)
+    |-- macromolecular_stratum (1)   the skip's low endpoint (a downward reference, 14 to 4)
+    |-- causal_grounding (0)         minting the community stratum's four records
+    |-- (external, read-only) PrologAI causal_core, lists
+
+  macromolecular_stratum (1) --> causal_grounding (0)
+  cellular_stratum (2)       --> causal_grounding (0)
+  synaptic_stratum (3)       --> causal_grounding (0)
+
+Every intra-region import is to a strictly lower layer; there is no upward edge, so the
+strict layer rule passes. Two facts guard the layering deliberately. First, the
+region_stratum pack does NOT import community_stratum (layer 5, above it): the social
+source of cortisol is upstream, and the region reads only the transduced regime and gain
+down from the macromolecular cascade, so no upward edge is created. Second, the
+community_stratum pack (layer 5) imports the macromolecular pack (layer 1) DOWNWARD for
+the skip's low endpoint, and never imports the region - so it adds no upward edge either.
+
+
+PART FOUR - THE LAYER-ZERO SUBSTRATE AND THE LATTICE COORDINATION
+
+Both substrate packs are reused verbatim. neural_lattice is the slice's realisation of
+the closure rule: stigmergy for state plus notification for reactivity. It opens a single
+PrologAI Lattice nexus (a locus:// address), posts and awaits numbered PHASE CUES, and
+records the glass-box hop trace. A cue is a numbered positional slot (phase_1, phase_2),
+never the name of who picks it up; a waiter blocks on a private message queue with no
+busy-poll until a Lattice write wakes it. neural_lattice imports only PrologAI's
+library(lattice), so its layer(0) has no intra-region upward edge. causal_grounding
+holds the fourteen shared minting helpers (cm_stratum, cm_occ, cm_cnt, cm_rlz, cm_port,
+cm_conduit, cm_cro, cm_signed_assertion_over, and the rest), reused byte-identically from
+the Wave 2 slice so a record minted here has the same content-addressed id as the same
+record in the slice; it imports only PrologAI's causal_core, signing, and sha.
+
+The reentrant conditioning loop's only shared state is the loop snapshot, carried on the
+Lattice as a state dictionary. It rides two phases. Phase 1 is the TRIAL cue: the tick
+awaits it, does one appraise-and-condition step, and re-posts the next phase-1 cue
+(reentry). Phase 2 is the RESULT cue: when the association has settled or the trial
+budget is spent, the tick posts the outcome to phase 2 instead of re-entering. State
+lives in the environment, not in an actor's stack.
+
+
+PART FIVE - THE RUNTIME (ONE ACTOR, REENTRANT THROUGH THE LATTICE)
+
+The region has exactly one runtime actor: the conditioning tick,
+region_stratum_condition_tick/1, driven by the runner as a PrologAI cyclic_actor (a
+background thread). It awaits the phase-1 trial cue, appraises the cue at the current
+association and commits it through the once-mode membership contract (so the
+no-undefined-valence guarantee holds on EVERY trial), does one conditioning step, and
+re-posts either the next phase-1 cue (reentry) or the phase-2 result. The learned
+association changes monotonically under a steady schedule; the runner distinguishes three
+outcomes - CONVERGED (the association settles within tolerance), BOUNDED-STOP (an
+alternating partial-reinforcement schedule that reaches the trial bound without settling,
+a legal "not fully conditioned"), and never HANGS (the driver's phase-2 await is bounded,
+so a hang FAILS rather than blocks).
+
+The macromolecular, cellular, synaptic, and community packs are PURE: they carry no tick
+and never coordinate on the Lattice. The region invokes them DOWNWARD as sub-modules
+during a step (the cortisol read, the sensory encoding, the synaptic write, the skip's
+low endpoint), which is permitted structural reuse, not runtime coupling. The closure
+checker proves this non-vacuously: it confirms zero actor-to-actor references, that the
+tick reenters by re-posting a Lattice cue and never calls itself in-process, and that it
+awaits on the Lattice rather than busy-polling; injecting a self-recursive tick makes the
+checker exit 1.
+
+
+PART SIX - THE INTERFACES BETWEEN PACKS
+
+There are three interface surfaces: the downward runtime calls, the minted ports and
+appraisal conduit, and the membership-contract seam.
+
+The downward runtime calls. To appraise, the region reads the stimulus's innate
+threat/reward feature from cellular_stratum_encode/2 and clamps the resulting drive to a
+bounded salience with cellular_stratum_project/2; it reads the cortisol regime, the
+threat gain, and the reward suppression from macromolecular_stratum_cortisol_regime/2,
+macromolecular_stratum_threat_gain/2, and macromolecular_stratum_reward_suppression/2; an
+UNKNOWN stimulus (not encoded by the cellular neurons) makes the appraisal fail so the
+region abstains with the explicit no_appraisal. To condition, region_stratum_condition/3
+delegates to synaptic_stratum_potentiate/3 (a paired trial strengthens the association
+toward 1.0 by a half-gap Rescorla-Wagner step; an unpaired trial extinguishes it toward
+0.0).
+
+The ports and the appraisal conduit. The region mints a stimulus_input port that accepts
+two references - the cellular sensory-encoding occurrent and the synaptic plasticity
+occurrent - and an appraisal_output port that emits the affective-appraisal occurrent.
+Between them it mints the appraisal conduit: a COMPUTATIONAL conduit (it carries a
+transform, asserting it computes an appraisal rather than merely transmitting), whose
+transform is the region-internal appraisal causal relation object (the fear-conditioning
+occurrent causes the affective-appraisal occurrent, both at the region stratum, so this
+relation spans no strata). The macromolecular pack mints its own internal modulation
+causal relation object (receptor activation causes appraisal modulation, both at ordinal
+4). The only cross-stratal relation is the cortisol skip, owned by the community pack.
+
+The membership-contract seam. The committed appraisal is guarded by PrologAI's
+membership_contract construct, DECLARED not hand-rolled. region_stratum_commit_appraisal/2
+is a deliberately thin identity that returns the proposed appraisal; the guarantee comes
+from the declaration
+
+  :- membership_contract_enforce_goal(region_stratum_commit_appraisal/2, 2,
+          region_stratum_legal_appraisal, no_appraisal, once).
+
+which names the legal set by a membership-TEST goal (the accessor form, N11) rather than a
+list, and checks the committed single answer deterministically (once mode, N14). The
+accessor region_stratum_legal_appraisal/1 accepts appraisal(Valence, Salience, Regime)
+when the salience is a number in the unit interval and the valence is legal in its regime
+(region_stratum_valence_in_regime/2: all four valences at baseline; appetitive suppressed
+under stress). Because the legal set is context-dependent on the cortisol regime and
+carries a continuous salience, it is neither a fixed list nor countable - which is exactly
+why the never-materialised accessor form is required.
+
+
+PART SEVEN - THE CORTISOL CROSS-STRATAL SKIP, A LEGAL DOWNWARD EDGE
+
+The cortisol channel is re-engaged, not re-invented, from the Wave 2 slice: the same
+shape, minted fresh here. It is a causal relation object owned by community_stratum
+(community_stratum_cortisol_skip_cro/1): the social-stressor occurrent at the
+community-and-society stratum (ordinal 14) causes the receptor-activation occurrent at the
+macromolecular stratum (ordinal 4), carrying skips:true. The relation does not model the
+intervening endocrine pathway (the hypothalamic-pituitary-adrenal axis), so it declares
+the skip honestly rather than pretending to a mechanism it does not have.
+
+Two independent checks accept it. The N6 binding checker passes it because it is a
+DOWNWARD edge - it runs from a high ordinal (14) to a low ordinal (4); only an upward
+cross-stratal edge, which would let a fine stratum silently drive a coarse one, would
+fail. The structure validator's skip classifier (causal_core_classify plus
+causal_core_skip_gaps, exercised by community_stratum_skip_check/2) classifies it as
+skipping with an empty skip-gaps list - because skips:true is set, the absent
+intervening mechanism is a declared, positive finding, not an unexplained gap. A
+provenance assertion over the skip is minted and Ed25519-signed, and the validator
+verifies that signature. The unmodelled intervening mechanism is recorded honestly as the
+LEDGER finding AMYGDALA-2, a recurrence of the same unmanaged cross-stratal seam the
+slice, the memory region, and the cerebellum each recorded; it is re-engaged deliberately,
+not closed.
+
+
+PART EIGHT - READ-ONLY REUSE OF PROLOGAI
+
+PrologAI is reused at a pinned commit through the PROLOGAI_HOME environment variable
+(default /home/ccaitwo/PrologAI), exactly as the arbiter, the memory region, and the
+cerebellum did - by checkout, no vendoring and no fork. The region reuses, read-only,
+PrologAI's lattice (the stigmergy plus await/notify substrate), actors (the cyclic_actor
+thread that drives the tick), membership_contract (the N8 contract, its N11 accessor form,
+and the Wave 8 N14 once mode that the committed appraisal declares), causal_core and the
+signing harness (the Causalontology 2.0.0 engine and Ed25519 signing the stratum packs
+load through causal_grounding), and layer (the N6 binding the gate script runs). Each gate
+resolves PROLOGAI_HOME, guards that PrologAI - and specifically the construct it needs, the
+membership_contract module or the layer pack - is reachable, and stops with a clear message
+otherwise. The region minted, validated, and gated against PrologAI main at commit
+35678d53d818d97f93cb89cd8a581ead8d587f9a (the Wave 8 Part One once-mode tip). PrologAI is
+never modified.

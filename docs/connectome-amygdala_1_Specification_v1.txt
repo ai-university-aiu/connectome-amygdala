@@ -1,0 +1,208 @@
+CONNECTOME-AMYGDALA SPECIFICATION  (v1)
+
+This is the first of six documents describing the connectome-amygdala repository.
+The five Specification, Pseudocode, Architecture, Refinement, and Completion files
+follow the SPARC methodology; a sixth Demonstration file is a plan of intent.
+Author: the PrologAI Community.
+
+Acronyms are spelled out in full on first use, with the acronym in parentheses, and
+the bare acronym thereafter. External proper names are kept verbatim (SWI-Prolog,
+Ed25519, JavaScript Object Notation, Git).
+
+
+PART ONE - PURPOSE
+
+connectome-amygdala is a valence and salience region: the first Connectome region
+whose job is to APPRAISE. Where the earlier regions selected (connectome-arbiter),
+stored (connectome-hippocampus), and corrected against a taught error
+(connectome-cerebellum), this region assigns a stimulus an affective meaning. It gives
+the stimulus a VALENCE (an affective tag) and a SALIENCE (how much it matters), it
+learns threat by association (fear conditioning), and it modulates the appraisal by
+cortisol - and it makes the appraisal it commits provably safe, so the region can never
+emit a valence outside the defined set.
+
+It is Wave 8, Part Three of the Connectome program. It is independent of Part Two (the
+cerebellum) - neither blocks the other - but both rest on Part One, PrologAI's Wave 8
+once-deterministic membership mode. Its dynamics (affective appraisal and associative
+fear learning) are genuinely distinct from selection, storage, and supervised
+correction, and that distinctness is the point: an appraising region is the one that
+forces contact with a construct the earlier regions never needed - a held, modulatory
+affective state.
+
+
+PART TWO - FUNCTIONAL REQUIREMENTS
+
+FR-1 APPRAISE. Given a stimulus, a cortisol level, and the current learned association,
+the region produces a valence (its affective tag: threat, safe, appetitive, or neutral)
+and a salience (a bounded rate in the range 0.0 to 1.0). The appraisal combines the
+stimulus's innate threat and reward feature (read down from the cellular projection
+neurons) with the learned association, modulated by cortisol.
+
+FR-2 ABSTAIN ON THE UNKNOWN. A stimulus the cellular neurons do not encode yields the
+explicit no-appraisal. The region abstains; it never invents an affective tag for a
+stimulus it cannot read.
+
+FR-3 CONDITION AND EXTINGUISH. The region learns threat by association: a previously
+neutral cue paired with an aversive outcome acquires a threat association (lateral
+amygdala long-term potentiation, or LTP), so it later evokes threat; an unpaired cue
+extinguishes the association back toward zero. This is dynamics, kept native (an
+associative rate law), never forced into a causal relation object (CRO).
+
+FR-4 MODULATE BY CORTISOL. The region modulates the appraisal by a circulating cortisol
+level: a cortisol level classifies into a baseline or a stress regime (threshold 0.5),
+a threat gain rises with cortisol (gain equals 1.0 plus the cortisol level), and reward
+appraisal is suppressed under stress (a reward factor of 1.0 at baseline, 0.0 under
+stress).
+
+FR-5 NO UNDEFINED VALENCE. The committed appraisal must name a valence in the legal set,
+or be the explicit no-appraisal; it may never carry a valence outside the defined set (an
+invented affective tag) or a malformed salience. This is the safety property.
+
+FR-6 CONTEXT-DEPENDENT LEGALITY. The legal valence set depends on the cortisol regime.
+At baseline all four valences are legal; under stress the appetitive (reward and approach)
+appraisal is suppressed and is not a legal tag. Cortisol narrows the set. Because the set
+is context-dependent AND the salience is a continuous real, the legal set is neither a
+fixed list nor even countable.
+
+FR-7 COMMIT ONE APPRAISAL. The region commits exactly one appraisal per stimulus, guarded
+so the committed appraisal is a member of the legal set (in its regime) or the explicit
+no-appraisal, checked deterministically.
+
+FR-8 THE CONDITIONING LOOP. The region runs a reentrant conditioning loop - appraise,
+condition, re-appraise - coordinated through the shared Lattice memory. Under a steady
+schedule the learned association changes monotonically. The loop converges (the
+association settles), bounded-stops (an alternating partial-reinforcement schedule that
+never settles, a legal "not fully conditioned"), or - never - hangs.
+
+
+PART THREE - NON-FUNCTIONAL REQUIREMENTS
+
+NFR-1 GLASS-BOX NARRATION. Every appraisal, every conditioning trial, and every refusal
+is narrated in plain language as it happens - the valence assigned, the association before
+and after, the cortisol regime, the bounded-stop or convergence verdict - so a reader
+watches the region reason rather than trusting a final answer.
+
+NFR-2 STRATUM-PRIMARY DECOMPOSITION. Under the Wave 3 verdict the region is one pack per
+Causalontology stratum on the outside, and one construct per module on the inside. The
+cross-pack edges are the stratum edges; the internal sub-modules (appraise, condition,
+modulate) are independently testable.
+
+NFR-3 GROUNDING. Every structure record is grounded in Causalontology 2.0.0 and validates
+against the standard's conformance engine; the appraisal and learning dynamics are kept
+native (threshold and rate laws), never forced into a causal relation object.
+
+NFR-4 THE STRICT LAYER RULE. Every pack declares its layer; no lower-layer pack depends on
+a higher-layer one; the layer checker reports zero upward edges.
+
+NFR-5 THE LAYER-TO-STRATUM BINDING. Every stratum pack declares the Causalontology stratum
+it represents; the binding checker confirms each pack's layer is order-preserving with its
+stratum's ordinal.
+
+NFR-6 THE CLOSURE DISCIPLINE. State lives on the Lattice (stigmergy); reactivity is a
+blocking, bounded await woken by a write (no busy-poll); there are zero actor-to-actor
+references and no in-process recursion.
+
+NFR-7 THE SAFETY INVARIANT - DECLARED, NOT HAND-ROLLED. No undefined valence is enforced by
+DECLARING PrologAI's membership contract in its accessor form (a membership-test goal, so
+the uncountable legal set is never materialised) and in once mode (the single committed
+appraisal, checked deterministically). Nothing is hand-rolled.
+
+NFR-8 READ-ONLY REUSE. PrologAI is reused at a pinned commit through the PROLOGAI_HOME
+environment variable; PrologAI is never modified. Each gate stops with a clear message if
+PrologAI - or specifically the membership_contract construct - is not reachable.
+
+NFR-9 ENGLISH-READABLE CODE. Every line of code in every Prolog file carries one plain
+English comment immediately above it, per the English-Readable-Code (ERC) rule, including
+the pack manifests and the test suites.
+
+
+PART FOUR - OBJECTIVES AND CONSTRAINTS
+
+The region's function is appraisal - assigning affective meaning and learning threat by
+association - which is genuinely distinct from the dopamine reward-prediction-error of the
+vertical slice, from the memory region's store-and-recall, and from the cerebellum's
+supervised correction. That distinctness is the objective: an appraisal is not a one-shot
+output but an affective STATE (a valence and a salience) that persists and colours later
+processing, and whose very legality depends on a persisted context (the cortisol regime).
+Building the region is the way to find out whether PrologAI can express such a state. The
+headline finding (AMYGDALA-1) is that it cannot: there is no first-class construct for a
+held, modulatory affective state.
+
+Constraints: touch only the strata the region's constructs occupy; do not modify PrologAI,
+Mentova, the frozen prologai-loops spike, connectome-proto-agi, the three frozen Wave 3
+arms, connectome-arbiter, connectome-hippocampus, or connectome-cerebellum; do not modify
+the Abstraction and Reasoning Corpus for Artificial General Intelligence (ARC-AGI) solving
+core in PrologAI; do not hand-roll the membership guarantee; do not weaken a gate; do not
+scale to the full connectome or become a general framework. A gap the region hits is a
+Ledger entry, not a change to PrologAI.
+
+
+PART FIVE - ACCEPTANCE CRITERIA (THE GATES)
+
+AC-1 NO UNDEFINED VALENCE. Every committed appraisal is a member of the legal valence set
+(in its cortisol regime) or the explicit no-appraisal; an invented tag, an out-of-range
+salience, and a contextually-illegal appraisal (appetitive under stress) are each refused;
+the once-mode contract holds on every commit. The adversarial battery inspects 192 attempts
+with 9 out-of-set refusals and 0 escapes. This is the first, non-negotiable gate.
+
+AC-2 PACK TESTS. Every pack's in-pack PLUnit suite passes: the shared minting substrate 2,
+the neural_lattice 2, the cellular_stratum 5, the synaptic_stratum 5, the
+macromolecular_stratum 6, the community_stratum 5, and the region_stratum 14
+(thirty-nine test blocks in total).
+
+AC-3 STRUCTURE. The region's 32 newly-minted Causalontology 2.0.0 records validate across
+eight kinds (assertion, causal relation object, conduit, continuant, occurrent, port,
+realizable, stratum); the cross-stratal cortisol relation classifies as a clean skip
+(skipping, with an empty skip-gaps list); and the Ed25519-signed provenance over the
+cortisol skip verifies.
+
+AC-4 LAYER AND BINDING. The layer checker reports zero upward edges among the 7 declared
+packs (layers 0, 0, 1, 2, 3, 4, 5). The binding checker confirms the 5 bound packs are
+order-preserving with their stratum ordinals (4, 6, 7, 9, 14 map to layers 1, 2, 3, 4, 5),
+with the 2 substrate packs left honestly unbound and 0 binding violations; the downward
+cortisol skip passes (only an upward edge would fail).
+
+AC-5 CLOSURE. Coordination is through the Lattice, with zero actor-to-actor references and
+no busy-poll; the one runtime actor is the conditioning tick; the check is proven
+non-vacuous (injecting a self-recursive tick makes it fail).
+
+AC-6 THE CONDITIONING LOOP. The loop converges or bounded-stops, never hangs, and the
+association changes monotonically: acquisition (a paired tone) converges to threat at 5
+trials as the association climbs from 0.0 to 0.969 and the cue flips from neutral to threat;
+extinction (a conditioned tone unpaired) converges to neutral at 5 trials as the association
+decays from 0.9 to 0.028; a partial (alternating) schedule bounded-stops at 8 trials with the
+association near 0.33; the adversarial invented and contextually-illegal valences are refused.
+All 21 conditioning hops arrive through the Lattice.
+
+AC-7 MINI REGRESSION. Via PrologAI's own harness, the Abstraction and Reasoning Corpus for
+Artificial General Intelligence, generation one (ARC-AGI-1) forty of forty and generation two
+(ARC-AGI-2) twelve of twelve, in the honest ten-percent form. The full regression stays
+deferred; this is never rounded up to four hundred of four hundred or one hundred twenty of
+one hundred twenty.
+
+
+PART SIX - REFLECTION
+
+The chief design choice is to let the enforced invariants carry the safety property. The
+committed appraisal is one answer against a legal set that is both context-dependent (the
+cortisol regime) and uncountable (the continuous salience), so declaring the membership
+contract in its accessor form (a membership-test goal, never materialised) and in once mode
+(the single committed answer, checked deterministically) is exactly the right fit - no
+hand-rolled guard.
+
+The chief predicted risk was affect itself, and the region pressed on it as expected.
+PrologAI has no first-class construct for a persisted, modulatory affective state, so the
+region has to work around the absence on two fronts. First, the membership contract - even
+its accessor form - judges the OUTPUT value alone; its test goal is called with only the
+committed value and cannot receive context, so to make the legal valence set depend on the
+cortisol regime the region must SMUGGLE the regime into the committed value (the appraisal is
+the triple of valence, salience, and regime rather than valence and salience). Second, the
+persisted affect (the learned association, the cortisol tone) is carried as ordinary Lattice
+and module data, plain fields on the conditioning-loop state, not as a first-class held
+affect. Both are honest workarounds and both are recorded as workarounds (AMYGDALA-1). A
+second, familiar wall recurs: the cortisol channel is a cross-stratal skip from the
+community-and-society stratum (ordinal 14) to the macromolecular stratum (ordinal 4) with no
+modelled hypothalamic-pituitary-adrenal (HPA) axis mechanism between; it carries a skips-true
+flag honestly and classifies clean (AMYGDALA-2, a recurrence). The region runs and its
+no-undefined-valence guarantee holds, but the deliverable is the finding: the region records
+the wall rather than papering over it.

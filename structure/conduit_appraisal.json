@@ -1,0 +1,9 @@
+{
+  "carries": ["occurrent:446c2fbd6123152978003518148591334aec7ef500afb1db6f66f41d611c230b" ],
+  "from":"port:eda7776c03570725bbc070d3765e0ac9e87658e21669a498b3705c93de178853",
+  "id":"conduit:7cdc57b40f9e63b5d13ceb10172fc0b029a923d33c4f2b0aabfaea6d3a4e8250",
+  "label":"appraisal_pathway",
+  "to":"port:c9815282ee7e9e29fe18b05fb281bf591640092842b080cde550fabd0b6bda91",
+  "transform":"causal_relation_object:c766d89dbbb700172acb5466452ddabd55d0d126806adb9c7211bc11bc2ff986",
+  "type":"conduit"
+}
