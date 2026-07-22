@@ -54,7 +54,7 @@ PART TWO - THE GATE RESULTS (HONEST FORM)
 The nine out-of-set refusals are invented affective tags (euphoria, rage, xyzzy),
 out-of-range saliences, and the contextually-illegal appetitive-under-stress - each
 one the membership contract refuses, with zero escapes over 192 attempts. The
-structure validation covers 32 newly-minted Causalontology 2.0.0 records across the
+structure validation covers 32 newly-minted Causalontology 3.0.0 records across the
 eight kinds assertion, causal_relation_object (CRO), conduit, continuant, occurrent,
 port, realizable, and stratum; the cortisol CRO classifies as a skip with an empty
 skip-gap list, and the Ed25519 signed assertion over it verifies. The one runtime
@@ -81,7 +81,7 @@ values are identical before and after, and every suite stays green.
 PART FOUR - THE PINNED PROLOGAI COMMIT
 
 The region was built, minted, validated, and gated against PrologAI main at commit
-35678d53d818d97f93cb89cd8a581ead8d587f9a - the Wave 8 Part One once-mode tip -
+a1b23432c6a357b8768422daa41a3abcbcf52de2 - Wave 10 Stage 1, the Causalontology 3.0.0 adoption -
 resolved read-only through the PROLOGAI_HOME environment variable. Nothing outside
 this repository was modified. PrologAI, the memory region (hippocampus), the arbiter,
 the cerebellum, the vertical slice, the three frozen Wave 3 arms, the frozen spike,

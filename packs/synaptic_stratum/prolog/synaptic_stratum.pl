@@ -11,7 +11,7 @@
     causal_relation_object, per the grounding rule) — a single sub-module,
     synaptic_stratum_potentiate/3.
 
-    Its STRUCTURE is grounded in Causalontology 2.0.0: the synaptic stratum record,
+    Its STRUCTURE is grounded in Causalontology 3.0.0: the synaptic stratum record,
     the lateral-amygdala convergence synapse continuant that bears the plasticity,
     the sensory-afferent synapse continuant that delivers the cue, the potentiation
     (association-change) occurrent, and the plasticity disposition.

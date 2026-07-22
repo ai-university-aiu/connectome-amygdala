@@ -36,7 +36,7 @@ all flow from the same one-line declaration.
 The structure validator (bin/validate_structure.sh, over
 bin/validate_structure.pl) assembles the region's 32 newly-minted records from the
 five stratum packs and validates every one against PrologAI's unmodified
-Causalontology 2.0.0 conformance engine - the JavaScript Object Notation (JSON)
+Causalontology 3.0.0 conformance engine - the JavaScript Object Notation (JSON)
 schema check (co_validate_schema/4) and the local semantic rules
 (causal_core_validate_semantics/3) - across 8 record kinds (assertion,
 causal_relation_object, conduit, continuant, occurrent, port, realizable, and
@@ -152,7 +152,7 @@ benchmarks. It reports ARC-AGI-1 40/40 and ARC-AGI-2 12/12. These are the honest
 figures: forty of four hundred and twelve of one hundred twenty, a spot-check, not
 the full run. The full regression stays DEFERRED, and this result is NEVER rounded
 up to 400/400 or 120/120. The region reuses PrologAI read-only at the pinned
-commit 35678d53d818d97f93cb89cd8a581ead8d587f9a (main, the Wave 8 Part One
-once-mode tip); PrologAI was not modified, so the mini regression is a guard that
+commit a1b23432c6a357b8768422daa41a3abcbcf52de2 (main, Wave 10 Stage 1, the
+Causalontology 3.0.0 adoption); PrologAI was not modified, so the mini regression is a guard that
 the region's checkout did not disturb the substrate it rests on, not a claim about
 the region's own reasoning.

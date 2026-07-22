@@ -42,7 +42,7 @@
     (reaches its trial bound — a legal "not fully conditioned", as partial
     reinforcement does), or — never — hangs.
 
-    Its STRUCTURE is grounded in Causalontology 2.0.0. It imports the cellular
+    Its STRUCTURE is grounded in Causalontology 3.0.0. It imports the cellular
     projection neurons (Layer 2), the synaptic associative write (Layer 3), and the
     macromolecular cortisol cascade (Layer 1) — all DOWNWARD edges — plus the minting
     vocabulary, the Lattice, and PrologAI's membership_contract construct. Its

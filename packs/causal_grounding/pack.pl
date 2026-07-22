@@ -3,7 +3,7 @@ name(causal_grounding).
 % State the fact: version('0.1.0') — a valence and salience region prototype, not a release.
 version('0.1.0').
 % State the fact: title naming the pack and its substrate role.
-title('Connectome amygdala — causal_grounding: the shared Causalontology 2.0.0 minting vocabulary').
+title('Connectome amygdala — causal_grounding: the shared Causalontology 3.0.0 minting vocabulary').
 % State the fact: author is the PrologAI Community (no AI attribution, per house rules).
 author('PrologAI Community', 'ai.university.aiu@gmail.com').
 % State the fact: home points at the connectome-amygdala repository (Wave 8 valence and salience region).

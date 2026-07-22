@@ -13,7 +13,7 @@ construct per module on the inside (the Wave 3 verdict). It occupies five strata
 layer-zero substrate of two packs:
 
   layer 0  neural_lattice          substrate (no stratum)               stigmergy plus await/notify
-  layer 0  causal_grounding        substrate (no stratum)               the Causalontology 2.0.0 minting vocabulary
+  layer 0  causal_grounding        substrate (no stratum)               the Causalontology 3.0.0 minting vocabulary
   layer 1  macromolecular_stratum  stratum macromolecular (ordinal 4)   the cortisol (glucocorticoid) receptor cascade
   layer 2  cellular_stratum        stratum cellular (ordinal 6)         the amygdala projection neurons
   layer 3  synaptic_stratum        stratum synaptic (ordinal 7)         the lateral-amygdala associative plasticity write
@@ -34,7 +34,7 @@ The two substrate packs carry no stratum. They are layer(0) and are unbound gaps
 N6 binding, never violations: neural_lattice is the coordination substrate and
 causal_grounding is the shared minting vocabulary. Every record-owning pack co-locates
 its structure with its runtime (the verdict's stratum-primary stance); together the
-packs mint 32 Causalontology 2.0.0 records across eight kinds (assertion,
+packs mint 32 Causalontology 3.0.0 records across eight kinds (assertion,
 causal_relation_object, conduit, continuant, occurrent, port, realizable, stratum),
 materialised as one JavaScript Object Notation (JSON) file each under structure/.
 
@@ -218,10 +218,10 @@ cerebellum did - by checkout, no vendoring and no fork. The region reuses, read-
 PrologAI's lattice (the stigmergy plus await/notify substrate), actors (the cyclic_actor
 thread that drives the tick), membership_contract (the N8 contract, its N11 accessor form,
 and the Wave 8 N14 once mode that the committed appraisal declares), causal_core and the
-signing harness (the Causalontology 2.0.0 engine and Ed25519 signing the stratum packs
+signing harness (the Causalontology 3.0.0 engine and Ed25519 signing the stratum packs
 load through causal_grounding), and layer (the N6 binding the gate script runs). Each gate
 resolves PROLOGAI_HOME, guards that PrologAI - and specifically the construct it needs, the
 membership_contract module or the layer pack - is reachable, and stops with a clear message
 otherwise. The region minted, validated, and gated against PrologAI main at commit
-35678d53d818d97f93cb89cd8a581ead8d587f9a (the Wave 8 Part One once-mode tip). PrologAI is
+a1b23432c6a357b8768422daa41a3abcbcf52de2 (Wave 10 Stage 1, the Causalontology 3.0.0 adoption). PrologAI is
 never modified.

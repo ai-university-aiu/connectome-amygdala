@@ -28,7 +28,7 @@ PART TWO - WHAT TO RUN
 
 TRACK ONE - THE APPRAISAL DEMO. Run bin/run_amygdala.sh with PROLOGAI_HOME pointing at a
 PrologAI checkout at or after the once-mode commit
-(35678d53d818d97f93cb89cd8a581ead8d587f9a). Its first section appraises a spread of seven
+(a1b23432c6a357b8768422daa41a3abcbcf52de2). Its first section appraises a spread of seven
 probe stimuli and commits each through the contract.
   What it shows: every one of the four valences appears - pain reads threat, food at rest
   reads appetitive, an untrained tone reads neutral, and a part-conditioned tone at rest
@@ -71,7 +71,7 @@ battery) and read the adversarial line in the runner.
 
 TRACK FOUR - THE GATES. Run each bin/*.sh checker and PrologAI's mini regression.
   What it shows: the structure validator (bin/validate_structure.sh) confirms 32
-  newly-minted records valid against Causalontology 2.0.0 across eight kinds (assertion,
+  newly-minted records valid against Causalontology 3.0.0 across eight kinds (assertion,
   causal_relation_object, conduit, continuant, occurrent, port, realizable, and stratum),
   that the cortisol skip classifies as skipping with an empty skip-gap list, and that the
   Ed25519 signed assertion over that skip verifies. The layer rule (bin/check_layers.sh)

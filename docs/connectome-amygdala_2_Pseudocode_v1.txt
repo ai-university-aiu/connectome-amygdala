@@ -242,7 +242,7 @@ PROCEDURE community_stratum_cortisol_skip_cro(-> Cro):
         receptor-activation occurrent (the skip's LOW endpoint, at macromolecular ordinal
         4) - a DOWNWARD reference.
     STEP mint the CRO from the stressor cause to the receptor effect, flagged skips:true
-        (LIBRARY cm_cro, the shared Causalontology 2.0.0 minting vocabulary).
+        (LIBRARY cm_cro, the shared Causalontology 3.0.0 minting vocabulary).
     RETURN the minted Cro.
     NOTE cortisol jumps community 14 -> macromolecular 4 without modelling the intervening
         hypothalamic-pituitary-adrenal (HPA) axis, so the CRO carries skips:true honestly.
@@ -292,7 +292,7 @@ TEST AC-4 (the loop reenters through the Lattice): GIVEN the one runtime actor
     actor-to-actor references, no in-process recursion, and no busy-poll; the proof is
     NON-VACUOUS (injecting a self-recursive tick makes the checker exit 1).
 
-TEST AC-5 (the structure validates): GIVEN the 32 minted Causalontology 2.0.0 records
+TEST AC-5 (the structure validates): GIVEN the 32 minted Causalontology 3.0.0 records
     across eight kinds, WHEN the validator runs THEN all are valid, the cortisol skip
     classifies as skipping with empty skip-gaps, and the Ed25519 signed assertion over the
     cortisol skip verifies.

@@ -18,7 +18,7 @@
     the skipping causal_relation_object; this pack owns its low endpoint, the
     receptor-activation occurrent.
 
-    Its STRUCTURE is grounded in Causalontology 2.0.0: the macromolecular stratum
+    Its STRUCTURE is grounded in Causalontology 3.0.0: the macromolecular stratum
     record, the glucocorticoid-receptor cascade continuant that bears the
     transduction, the receptor-activation occurrent (the skip's low endpoint), the
     appraisal-modulation occurrent, the modulation disposition, and the modulation
