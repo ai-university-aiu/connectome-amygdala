@@ -12,7 +12,7 @@
     DYNAMICS, kept native (deterministic read-outs, never a causal_relation_object) —
     two thin sub-modules, cellular_stratum_encode/2 and cellular_stratum_project/2.
 
-    Its STRUCTURE is grounded in Causalontology 2.0.0: the cellular stratum record,
+    Its STRUCTURE is grounded in Causalontology 3.0.0: the cellular stratum record,
     the lateral-amygdala input neuron, the basolateral projection neuron, and the
     central-nucleus output neuron continuants, the sensory-encoding occurrent, and
     the encoding disposition of the input neuron.

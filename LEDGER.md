@@ -14,8 +14,8 @@
 > remedy. Parents are cited for second sightings.
 >
 > The region was built at a PINNED PrologAI commit,
-> **35678d53d818d97f93cb89cd8a581ead8d587f9a** (main, the Wave 8 Part One once-mode
-> tip), reused read-only through `PROLOGAI_HOME`; PrologAI was not modified. A gap is
+> **a1b23432c6a357b8768422daa41a3abcbcf52de2** (main, Wave 10 Stage 1, the Causalontology 3.0.0
+> adoption), reused read-only through `PROLOGAI_HOME`; PrologAI was not modified. A gap is
 > a Ledger entry, never a commit against PrologAI.
 
 Legend: **S** = severity for the Connectome plan (H/M/L).

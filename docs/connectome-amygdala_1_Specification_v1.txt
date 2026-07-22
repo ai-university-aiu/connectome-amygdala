@@ -87,7 +87,7 @@ Causalontology stratum on the outside, and one construct per module on the insid
 cross-pack edges are the stratum edges; the internal sub-modules (appraise, condition,
 modulate) are independently testable.
 
-NFR-3 GROUNDING. Every structure record is grounded in Causalontology 2.0.0 and validates
+NFR-3 GROUNDING. Every structure record is grounded in Causalontology 3.0.0 and validates
 against the standard's conformance engine; the appraisal and learning dynamics are kept
 native (threshold and rate laws), never forced into a causal relation object.
 
@@ -150,7 +150,7 @@ the neural_lattice 2, the cellular_stratum 5, the synaptic_stratum 5, the
 macromolecular_stratum 6, the community_stratum 5, and the region_stratum 14
 (thirty-nine test blocks in total).
 
-AC-3 STRUCTURE. The region's 32 newly-minted Causalontology 2.0.0 records validate across
+AC-3 STRUCTURE. The region's 32 newly-minted Causalontology 3.0.0 records validate across
 eight kinds (assertion, causal relation object, conduit, continuant, occurrent, port,
 realizable, stratum); the cross-stratal cortisol relation classifies as a clean skip
 (skipping, with an empty skip-gaps list); and the Ed25519-signed provenance over the

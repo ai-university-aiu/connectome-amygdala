@@ -83,7 +83,7 @@ An invented valence, an out-of-range salience, or a contextually-illegal apprais
 | pack | layer | stratum (ordinal) | role |
 |---|---|---|---|
 | `neural_lattice` | 0 | — (substrate, unbound) | stigmergy + await/notify closure substrate (reused verbatim) |
-| `causal_grounding` | 0 | — (substrate, unbound) | the shared Causalontology 2.0.0 minting vocabulary (reused verbatim) |
+| `causal_grounding` | 0 | — (substrate, unbound) | the shared Causalontology 3.0.0 minting vocabulary (reused verbatim) |
 | `macromolecular_stratum` | 1 | macromolecular (4) | the glucocorticoid (cortisol) receptor cascade — the **low end** of the cortisol skip |
 | `cellular_stratum` | 2 | **cellular (6)** | the lateral-amygdala input and central-nucleus output neurons — sense the stimulus, carry the appraisal |
 | `synaptic_stratum` | 3 | synaptic (7) | the lateral-amygdala long-term potentiation that writes the learned fear association |
@@ -118,15 +118,15 @@ apart.
 ## Cross-repo provenance
 
 The region reuses PrologAI **read-only, by checkout** — no vendoring, no fork. It is
-pinned to PrologAI commit **`35678d53d818d97f93cb89cd8a581ead8d587f9a`** (main, the Wave
-8 Part One once-mode tip). Every gate resolves PrologAI through the **`PROLOGAI_HOME`**
+pinned to PrologAI commit **`a1b23432c6a357b8768422daa41a3abcbcf52de2`** (main, Wave 10 Stage 1, the
+Causalontology 3.0.0 adoption). Every gate resolves PrologAI through the **`PROLOGAI_HOME`**
 environment variable (default `/home/ccaitwo/PrologAI`) and stops with a clear message
 if PrologAI — or specifically the `membership_contract` construct — is not reachable.
 
 ## Running it
 
 ```bash
-# Point at a PrologAI checkout at (or after) commit 35678d5 (with the once mode).
+# Point at a PrologAI checkout at (or after) commit a1b2343 (with the once mode).
 export PROLOGAI_HOME=/path/to/PrologAI
 
 # Present stimuli, run the conditioning loop, and prove no undefined valence.
@@ -144,7 +144,7 @@ attempts to commit an undefined and a contextually-illegal valence being **refus
 ```bash
 bin/check_membership.sh        # 1. NO UNDEFINED VALENCE — the flagship gate (192 attempts, 0 escapes, 9 out-of-set refusals)
 bin/run_tests.sh               # every pack's in-pack PLUnit suite
-bin/validate_structure.sh      # 32 newly-minted Causalontology 2.0.0 records valid; the cortisol skip and the signature verify
+bin/validate_structure.sh      # 32 newly-minted Causalontology 3.0.0 records valid; the cortisol skip and the signature verify
 bin/check_layers.sh            # L4 — zero upward edges among the declared packs
 bin/check_layer_binding.sh     # N6 — every pack's layer is order-preserving with its stratum's ordinal (4/6/7/9/14 → layers 1/2/3/4/5)
 bin/check_no_coupling.sh       # closure — the conditioning loop reenters through the Lattice; 0 actor-to-actor refs; no busy-poll
@@ -163,7 +163,7 @@ Plus the mini regression via PrologAI's own harness
   list, accessor, and once mode); the shape of the Wave 2 slice's cortisol skip.
 - **New**: the appraise / condition / modulate constructs; the affective-appraisal and
   associative-fear-learning dynamics, native; and the region's own **32** newly-minted
-  Causalontology 2.0.0 structure records.
+  Causalontology 3.0.0 structure records.
 
 ## What this repository does not do
 
